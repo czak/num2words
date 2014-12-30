@@ -1,11 +1,17 @@
 package pl.czak.num2words;
 
 import static org.junit.Assert.*;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.Locale;
 
 public class TranslatorTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
     
     String[][] examples = {
         { "cero",                               "0" },
@@ -19,8 +25,7 @@ public class TranslatorTest {
     };
 
     String spanish(int number) {
-        Locale l = new Locale("es");
-        return new Translator(l).translate(number);
+        return new Translator().translate(number);
     }
 
     @Test
@@ -32,8 +37,21 @@ public class TranslatorTest {
         }
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test
+    public void defaultConstructor() {
+        new Translator();
+    }
+
+    @Test
+    public void spanishLocaleIsSupported() {
+        new Translator(new Locale("es"));
+    }
+
+    @Test
     public void unsupportedLocale() {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Unsupported locale: en");
+
         new Translator(Locale.ENGLISH);
     }
 

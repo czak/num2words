@@ -69,6 +69,10 @@ public class Translator {
         }
     }
 
+    public Translator() {
+        this(new Locale("es"));
+    }
+
     public String translate(int number) {
         if (number == 0) {
             return "cero";

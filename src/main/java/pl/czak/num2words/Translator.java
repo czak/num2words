@@ -1,5 +1,7 @@
 package pl.czak.num2words;
 
+import java.util.Locale;
+
 public class Translator {
     // 0-29
     private static String[] literals = {
@@ -61,7 +63,38 @@ public class Translator {
             "novecientos"
     };
 
-    static String translate99(int n) {
+    public Translator(Locale locale) {
+        if (!locale.getLanguage().equals("es")) {
+            throw new IllegalArgumentException("Unsupported locale: " + locale.getLanguage());
+        }
+    }
+
+    public String translate(int number) {
+        if (number == 0) {
+            return "cero";
+        }
+        if (number == 1000000) {
+            return "un millón";
+        }
+
+        int thousands = (number / 1000) % 1000;
+        int under = number % 1000;
+
+        StringBuilder builder = new StringBuilder();
+
+        if (thousands > 0) {
+            if (thousands > 1) {
+                builder.append(translate999(thousands));
+            }
+            builder.append(" mil ");
+        }
+
+        builder.append(translate999(under));
+
+        return builder.toString().trim();
+    }
+
+    String translate99(int n) {
         // Do 29 praktycznie same wyjątki
         if (n <= 29) {
             return literals[n];
@@ -84,7 +117,7 @@ public class Translator {
         return builder.toString();
     }
 
-    static String translate999(int number) {
+    String translate999(int number) {
         int n = number % 1000;
 
         // 100 jest specifyczne
@@ -106,31 +139,6 @@ public class Translator {
         if (n % 100 > 0) {
             builder.append(translate99(n % 100));
         }
-
-        return builder.toString().trim();
-    }
-
-    public static String translate(int number) {
-        if (number == 0) {
-            return "cero";
-        }
-        if (number == 1000000) {
-            return "un millón";
-        }
-
-        int thousands = (number / 1000) % 1000;
-        int under = number % 1000;
-
-        StringBuilder builder = new StringBuilder();
-
-        if (thousands > 0) {
-            if (thousands > 1) {
-                builder.append(translate999(thousands));
-            }
-            builder.append(" mil ");
-        }
-
-        builder.append(translate999(under));
 
         return builder.toString().trim();
     }

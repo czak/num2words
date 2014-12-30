@@ -6,24 +6,24 @@ import org.junit.Test;
 
 public class TranslatorTest {
     
-    String t(int number) {
-        return Translator.translate(number);
-    }
+    String[][] examples = {
+        { "cero",                               "0" },
+        { "ochenta y seis",                     "86" },
+        { "ciento veintidós",                   "122" },
+        { "trescientos",                        "300" },
+        { "mil",                                "1000" },
+        { "mil tres",                           "1003" },
+        { "ochenta y seis mil ochenta y siete", "86087" },
+        { "un millón",                          "1000000" },
+    };
 
     @Test
-    public void testRegressions() {
-        assertEquals("ciento veintidós", t(122));
-        assertEquals("trescientos", t(300));
-        assertEquals("ochenta y seis", t(86));
-        assertEquals("cero", t(0));
-    }
-
-    @Test
-    public void testOverOneThousand() {
-        assertEquals("ochenta y seis mil ochenta y siete", t(86087));
-        assertEquals("mil", t(1000));
-        assertEquals("mil tres", t(1003));
-        assertEquals("un millón", t(1000000));
+    public void testTranslations() {
+        for (int i = 0; i < examples.length; i++) {
+            String expected = examples[i][0];
+            int number      = Integer.parseInt(examples[i][1]);
+            assertEquals(examples[i][0], Translator.translate(number));
+        }
     }
 
 }
